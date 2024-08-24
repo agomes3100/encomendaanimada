@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Aniversário, Alisson!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <!-- Tela inicial da encomenda -->
+    <div id="tela-inicial">
+        <div id="encomenda">Encomenda pra Você!</div>
+        <div id="input-container">
+            <input type="text" id="nome" placeholder="Digite seu nome pra receber">
+            <button onclick="mostrarFesta()">Receber</button>
+        </div>
+    </div>
+
+    <!-- Festa oculta inicialmente -->
+    <div id="bolo">Parabéns, Alisson!</div>
+    <div id="mensagem">Feliz Aniversário!</div>
+    <button id="voltar-button" onclick="location.reload()">Apague as Velinhas!</button>
+    
+    <audio id="somFesta" src="midias/music.mp3"></audio>
+
+    <div id="presente" onclick="mostrarSaudacao()"></div>
+    <div id="saudacao"></div>
+
+    <!-- Adicionando o particles.js a partir do CDN -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        function mostrarFesta() {
+            var nome = document.getElementById('nome').value;
+            var audio = document.getElementById('somFesta');
+            if (nome) {
+                // Esconde a tela inicial e exibe a festa
+                document.getElementById('tela-inicial').style.display = 'none';
+                document.getElementById('bolo').innerText = "Parabéns, " + nome + "!";
+                document.getElementById('bolo').style.display = 'block';
+                document.getElementById('mensagem').style.display = 'block';
+                document.getElementById('voltar-button').style.display = 'block';
+                audio.play(); // Toca o áudio
+                iniciarConfetes();
+                setTimeout(() => {
+                    document.getElementById('presente').style.display = 'block';
+                }, 5000); // Exibe o presente após 5 segundos
+            }
+        }
+
+        function iniciarConfetes() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": {
+                        "value": 200,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff"]
+                    },
+                    "shape": {
+                        "type": ["circle", "star"],
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.8,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 10,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": false
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 6,
+                        "direction": "bottom",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": false
+                        },
+                        "onclick": {
+                            "enable": false
+                        },
+                        "resize": true
+                    }
+                },
+                "retina_detect": true
+            });
+        }
+
+        function mostrarSaudacao() {
+            const saudacoes = [
+                "O Senhor te abençoe e te guarde. (Números 6:24)",
+                "O Senhor é meu pastor; nada me faltará. (Salmos 23:1)",
+                "Pois eu bem sei os planos que estou planejando para você, diz o Senhor. (Jeremias 29:11)",
+                "Confia no Senhor de todo o teu coração. (Provérbios 3:5)",
+                "Grandes coisas fez o Senhor por nós, pelas quais estamos alegres. (Salmos 126:3)",
+                "Mas o Senhor é o meu alto refúgio; o meu Deus é o rochedo em que me abrigo.",
+                "Porque Deus te amou tanto, que deu o seu Filho ungênito pra que não perecesses...(João 3:16) ",
+                "Aquietem-se e saibam que eu sou Deus;sou exaltado entre as nações,sou exaltado na terra.(Salmos 46:10)",
+                "Eu sou o Senhor, o Deus de vocês, que os tirei da terra do Egito, para ser o Deus de vocês. Eu sou o Senhor, o Deus de vocês.(Numeros 15:48)",
+                "'Eu sou o Deus de Abraão, o Deus de Isaque e o Deus de Jacó'? Ele não é Deus de mortos, e sim de vivos. (Mateus 22:32)"
+            ];
+            const saudacaoAleatoria = saudacoes[Math.floor(Math.random() * saudacoes.length)];
+            document.getElementById('saudacao').innerText = saudacaoAleatoria;
+            
+            // Mostrar a saudação gradativamente
+            document.getElementById('saudacao').style.display = 'block';
+            document.getElementById('saudacao').style.animation = 'aparecerSaudacao 2s ease-in-out forwards';
+        }
+    </script>
+</body>
+</html>
