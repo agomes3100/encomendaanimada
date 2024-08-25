@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feliz Aniversário!</title>
+
+    <!-- Favicon para navegadores de desktop -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Favicon para navegadores modernos -->
+    <link rel="icon" href="favicon-32x32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="favicon-16x16.png" type="image/png" sizes="16x16">
+
+    <!-- Favicon para dispositivos Apple -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -27,7 +39,7 @@
             height: 100%;
             z-index: -1;
         }
-        #bolo, #mensagem, #voltar-button, #presente, #saudacao {
+        #bolo, #mensagem, #voltar-button, #saudacao, #presente, #volume-control {
             display: none; /* Inicialmente escondidos */
         }
         #bolo {
@@ -119,21 +131,19 @@
         }
         #presente {
             position: relative;
-            font-size: 50px;
+            font-size: 80px; /* Aumenta o tamanho do presente */
             margin-top: 20px;
             cursor: pointer;
-            display: none; /* Inicialmente escondido */
         }
         #presente:before {
             content: "🎁";
-            font-size: 80px;
+            font-size: 100px;
         }
         #saudacao {
             font-size: 40px;
             color: #d32f2f;
             margin-top: 20px;
             display: none;
-            
         }
         @keyframes aparecerSaudacao {
             0% {
@@ -143,12 +153,26 @@
                 opacity: 1;
             }
         }
+        #volume-control {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #fff;
+            opacity: 0.7;
+            z-index: 10;
+            display: none; /* Inicialmente escondido */
+        }
+        #volume-control:hover {
+            opacity: 1;
+        }
         @media (max-width: 600px) {
             #bolo {
                 font-size: 60px;
             }
             #mensagem {
-                font-size: 20px;
+                font-size: 30px;
             }
             button {
                 font-size: 16px;
@@ -164,10 +188,13 @@
                 font-size: 35px;
             }
             #presente:before {
-                font-size: 60px;
+                font-size: 80px;
             }
             #saudacao {
-                font-size: 25px;
+                font-size: 35px;
+            }
+            #volume-control {
+                font-size: 24px;
             }
         }
     </style>
@@ -187,17 +214,22 @@
     <!-- Festa oculta inicialmente -->
     <div id="bolo">Parabéns, Alisson!</div>
     <div id="mensagem">Feliz Aniversário!</div>
-    <button id="voltar-button" onclick="location.reload()">Repetir a festa!</button>
-    
-    <audio id="somFesta" src="midias/music.mp3"></audio>
 
     <div id="presente" onclick="mostrarSaudacao()"></div>
     <div id="saudacao"></div>
+    <button id="voltar-button" onclick="location.reload()">Repetir a festa!</button>
+    
+    <audio id="somFesta" src="music.mp3"></audio>
+
+    <!-- Controle de Volume -->
+    <div id="volume-control" onclick="controlarVolume()">🔊</div>
 
     <!-- Adicionando o particles.js a partir do CDN -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
+        let audioMuted = false;
+
         function mostrarFesta() {
             var nome = document.getElementById('nome').value;
             var audio = document.getElementById('somFesta');
@@ -207,12 +239,10 @@
                 document.getElementById('bolo').innerText = "Parabéns, " + nome + "!";
                 document.getElementById('bolo').style.display = 'block';
                 document.getElementById('mensagem').style.display = 'block';
-                document.getElementById('voltar-button').style.display = 'block';
+                document.getElementById('presente').style.display = 'block';
+                document.getElementById('volume-control').style.display = 'block'; // Exibe o ícone de volume
                 audio.play(); // Toca o áudio
                 iniciarConfetes();
-                setTimeout(() => {
-                    document.getElementById('presente').style.display = 'block';
-                }, 2000); // Exibe o presente após 2 segundos
             }
         }
 
@@ -292,6 +322,12 @@
 
         function mostrarSaudacao() {
             const saudacoes = [
+                "Que Deus te abençoe com muitos anos de vida!",
+                "Feliz Aniversário! Que você tenha um dia repleto de bênçãos!",
+                "Que sua vida seja cheia de saúde, paz e amor. Feliz Aniversário!",
+                "Parabéns! Que Deus continue iluminando sua vida.",
+                "Feliz Aniversário! Que todos os seus sonhos se realizem.",
+                "Que o seu dia seja tão especial quanto você é. Parabéns!",
                 "O Senhor te abençoe e te guarde. (Números 6:24)",
                 "O Senhor é meu pastor; nada me faltará. (Salmos 23:1)",
                 "Pois eu bem sei os planos que estou planejando para você, diz o Senhor. (Jeremias 29:11)",
@@ -303,12 +339,28 @@
                 "Eu sou o Senhor, o Deus de vocês, que os tirei da terra do Egito, para ser o Deus de vocês. Eu sou o Senhor, o Deus de vocês.(Numeros 15:48)",
                 "'Eu sou o Deus de Abraão, o Deus de Isaque e o Deus de Jacó'? Ele não é Deus de mortos, e sim de vivos. (Mateus 22:32)"
             ];
-            const saudacaoAleatoria = saudacoes[Math.floor(Math.random() * saudacoes.length)];
-            document.getElementById('saudacao').innerText = saudacaoAleatoria;
-            
-            // Mostrar a saudação gradativamente
+            const saudacaoEscolhida = saudacoes[Math.floor(Math.random() * saudacoes.length)];
+            document.getElementById('saudacao').innerText = saudacaoEscolhida;
             document.getElementById('saudacao').style.display = 'block';
-            document.getElementById('saudacao').style.animation = 'aparecerSaudacao 2s ease-in-out forwards';
+            document.getElementById('saudacao').style.animation = 'aparecerSaudacao 2s ease-in-out';
+
+            // Exibir o botão de voltar após a saudação aparecer
+            setTimeout(() => {
+                document.getElementById('voltar-button').style.display = 'block';
+            }, 2000); // Exibe o botão após 2 segundos
+        }
+
+        function controlarVolume() {
+            var audio = document.getElementById('somFesta');
+            var volumeIcon = document.getElementById('volume-control');
+            if (audioMuted) {
+                audio.muted = false;
+                volumeIcon.innerText = "🔊";
+            } else {
+                audio.muted = true;
+                volumeIcon.innerText = "🔇";
+            }
+            audioMuted = !audioMuted;
         }
     </script>
 </body>
